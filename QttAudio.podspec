@@ -16,7 +16,7 @@ Pod::Spec.new do |spec|
   #
 
   spec.name         = "QttAudio"
-  spec.version      = "1.2.0"
+  spec.version      = "1.2.0.1"
   spec.summary      = "Qtt iOS Video SDK"
   spec.description  = "Qtt iOS Video SDK"
 
