@@ -119,6 +119,7 @@ typedef NS_ENUM(NSInteger, QttQualityType) {
     @property (nonatomic, assign) unsigned int uid;
     @property (nonatomic, assign) int vad;
     @property (nonatomic, assign) int volume;
+	@property (nonatomic, assign) NSString* name;
 @end
 
 #ifdef ENABLE_VIDEO
@@ -315,8 +316,9 @@ typedef NS_ENUM(NSInteger, VIDEO_PIXEL_FORMAT) {
     * @param role 加入频道的角色。TALKER表示主播，可说可听；AUDIENCE表示听众，只能听不能说
     * @param muted 加入频道的静音状态。0表示未静音，1表示静音
     * @param isReconnect 是否是断线重连加入
+    * @param name 加入频道设置的用户名。如果没有设置则为""
     */
-    - (void)onJoinSuccess:(NSString*)channelName uid:(NSUInteger)uid role:(QttChannelRole)role muted:(bool)muted;
+    - (void)onJoinSuccess:(NSString*)channelName uid:(NSUInteger)uid role:(QttChannelRole)role muted:(bool)muted name:(NSString*)name;
 
     /**
      * 自己重新加入频道成功
@@ -324,16 +326,18 @@ typedef NS_ENUM(NSInteger, VIDEO_PIXEL_FORMAT) {
      * @param uid 用户id。
      * @param role 重新加入频道的角色。TALKER表示主播，可说可听；AUDIENCE表示听众，只能听不能说
      * @param muted 重新加入频道的静音状态。0表示未静音，1表示静音
+     * @param name 加入频道设置的用户名。如果没有设置则为""
      */
-    - (void)onReJoinSuccess:(NSString*)channelName uid:(NSUInteger)uid role:(QttChannelRole)role muted:(bool)muted;
+    - (void)onReJoinSuccess:(NSString*)channelName uid:(NSUInteger)uid role:(QttChannelRole)role muted:(bool)muted name:(NSString*)name;
 
     /**
      * 其他用户加入，实现别人进入频道的逻辑
      * @param uid 加入频道的用户id
      * @param role 加入频道的角色。TALKER表示主播，可说可听；AUDIENCE表示听众，只能听不能说
      * @param muted 加入频道的静音状态。0表示未静音，1表示静音
+     * @param name 加入频道的用户设置的用户名。如果没有设置则为""
      */
-    - (void)onOtherJoin:(NSUInteger)uid role:(QttChannelRole)role muted:(bool)muted;
+    - (void)onOtherJoin:(NSUInteger)uid role:(QttChannelRole)role muted:(bool)muted name:(NSString*)name;
 
     /**
      * 自己加入失败，实现加入频道失败的逻辑
@@ -375,8 +379,9 @@ typedef NS_ENUM(NSInteger, VIDEO_PIXEL_FORMAT) {
      * 其他用户离开，实现别人离开频道的逻辑
      * @param uid 离开频道用户的id
      * @param role 离开频道用户的角色
+     * @param name 离开频道用户加入频道设置的用户名。如果没有设置则为""
      */
-    - (void)onOtherLeave:(NSUInteger)uid role:(QttChannelRole)role;
+    - (void)onOtherLeave:(NSUInteger)uid role:(QttChannelRole)role name:(NSString*)name;
 
     /**
      * 用户音量提示
@@ -389,15 +394,17 @@ typedef NS_ENUM(NSInteger, VIDEO_PIXEL_FORMAT) {
      * 用户mute状态，实现静音状态改变的逻辑
      * @param uid 用户id。如果为0，表示自己静音状态，否则表示他人静音状态
      * @param muted 0表示未静音，1表示静音
+     * @param name 加入频道设置的用户名。如果没有设置则为""
      */
-    - (void)onMuteStatusChanged:(NSUInteger)uid muted:(bool) muted;
+    - (void)onMuteStatusChanged:(NSUInteger)uid muted:(bool) muted name:(NSString*)name;
 
     /**
      * 用户角色状态，实现角色状态改变的逻辑
      * @param uid 用户id。如果为0，表示自己角色状态，否则表示他人角色状态
      * @param role TALKER表示主播，可说可听；AUDIENCE表示听众，只能听不能说
+     * @param name 加入频道设置的用户名。如果没有设置则为""
      */
-    - (void)onRoleStatusChanged:(NSUInteger)uid role:(QttChannelRole)role;
+    - (void)onRoleStatusChanged:(NSUInteger)uid role:(QttChannelRole)role name:(NSString*)name;
 
     /**
      * 当前通话网络统计回调，通话中每两秒触发一次
@@ -405,8 +412,9 @@ typedef NS_ENUM(NSInteger, VIDEO_PIXEL_FORMAT) {
      * @param txQuality 该用户的上行网络质量
      * @param rxQuality 该用户的下行网络质量
      * @param stat 通话相关的统计信息
+     * @param name 加入频道设置的用户名。如果没有设置则为""
      */
-    - (void)onNetworkStats:(NSUInteger)uid txQuality:(QttQualityType)txQuality rxQuality:(QttQualityType)rxQuality stat:(QttRtcStat*)stat;
+    - (void)onNetworkStats:(NSUInteger)uid txQuality:(QttQualityType)txQuality rxQuality:(QttQualityType)rxQuality stat:(QttRtcStat*)stat name:(NSString*)name;
 
     /**
      * 语音路由变更
@@ -434,8 +442,9 @@ typedef NS_ENUM(NSInteger, VIDEO_PIXEL_FORMAT) {
 	 * @param enabled
 	        true：该用户已启用视频功能。
             false：该用户已关闭视频功能。
+     * @param name 加入频道设置的用户名。如果没有设置则为""
 	 */
-	- (void)onUserEnableVideo:(uint32_t)uid enabled:(bool) enabled;
+	- (void)onUserEnableVideo:(uint32_t)uid enabled:(bool) enabled name:(NSString*)name;
 
     /**
      * 远端用户开/关本地视频采集回调。
@@ -444,8 +453,9 @@ typedef NS_ENUM(NSInteger, VIDEO_PIXEL_FORMAT) {
      * @param enabled
             true：该用户已启用本地视频功能。启用后，其他用户可以接收到该用户的视频流
             false：该用户已关闭视频功能。关闭后，该用户仍然可以接收其他用户的视频流，但其他用户接收不到该用户的视频流
+     * @param name 加入频道设置的用户名。如果没有设置则为""
      */
-	- (void)onUserEnableLocalVideo:(uint32_t)uid enabled:(bool) enabled;
+	- (void)onUserEnableLocalVideo:(uint32_t)uid enabled:(bool) enabled name:(NSString*)name;
 
     /**
      * 远端用户取消或恢复发布视频流回调。
@@ -454,8 +464,9 @@ typedef NS_ENUM(NSInteger, VIDEO_PIXEL_FORMAT) {
      * @param muted 远端用户是否取消发布视频流：
             true：取消发布视频流。
             false：发布视频流。
+     * @param name 加入频道设置的用户名。如果没有设置则为""
      */
-	- (void)onUserMuteVideo:(uint32_t)uid muted:(bool) muted;
+	- (void)onUserMuteVideo:(uint32_t)uid muted:(bool) muted name:(NSString*)name;
 #endif
 @end
 
@@ -597,11 +608,12 @@ typedef NS_ENUM(NSInteger, VIDEO_PIXEL_FORMAT) {
     * @param token 验证token
     * @param channelId 频道名称
     * @param uid 用户ID，32位无符号整数。如果不指定（即设为0），SDK 会自动分配一个，并在 onJoinSuccess 回调方法中返回。
+    * @param name 用户名字，长度须小于等于15个字符。不需要名字，可以设置为空字符串""。
     * @return
      - 0(ERR_SUCCESS): 成功.
      - < 0: 失败.
     */
-    - (int)join:(NSString*)token channelId:(NSString*)channelId uid:(unsigned int)uid;
+    - (int)join:(NSString*)token channelId:(NSString*)channelId uid:(unsigned int)uid name:(NSString*)name;
 
     /**
      * 开启（关闭）扬声器
