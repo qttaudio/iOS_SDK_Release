@@ -16,7 +16,7 @@ Pod::Spec.new do |spec|
   #
 
   spec.name         = "QttAudio"
-  spec.version      = "1.2.0.6"
+  spec.version      = "1.2.0.7"
   spec.summary      = "Qtt iOS Video SDK"
   spec.description  = "Qtt iOS Video SDK"
 
@@ -104,7 +104,7 @@ Pod::Spec.new do |spec|
   #  the lib prefix of their name.
   #
 
-  spec.frameworks = "AudioToolbox", "VideoToolbox", "AVFoundation", "CoreMedia", "GLKit"
+  spec.frameworks = "AudioToolbox", "VideoToolbox", "AVFoundation", "CoreMedia", "GLKit", "Network"
 
   spec.libraries = "c++", "resolv"
 
